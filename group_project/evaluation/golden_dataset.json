@@ -1,0 +1,77 @@
+[
+  {
+    "question": "How many examiners mark an IELTS Writing test?",
+    "expected_answer": "An IELTS Writing test is marked by between two and four examiners.",
+    "expected_context": "article_01.md: Your Writing test is marked by between 2 and 4 examiners to ensure accuracy and fairness."
+  },
+  {
+    "question": "What four criteria are used to assess IELTS Writing Task 1?",
+    "expected_answer": "Task Achievement, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy.",
+    "expected_context": "ielts_academic_writing_example_responses_examiner_comments.md: Task 1 responses are assessed on Task Achievement, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy."
+  },
+  {
+    "question": "What criterion replaces Task Achievement when IELTS Writing Task 2 is assessed?",
+    "expected_answer": "Task Response replaces Task Achievement; the other three criteria remain the same.",
+    "expected_context": "article_01.md: Writing Task 2 is assessed in much the same way as Task 1 except for the Task Response criterion."
+  },
+  {
+    "question": "How much does each assessment criterion contribute to the IELTS essay score?",
+    "expected_answer": "Each of the four criteria contributes 25 percent of the essay-writing score.",
+    "expected_context": "article_02.md: Each of these criteria is worth 25 percent of your total score for the essay writing task."
+  },
+  {
+    "question": "How should the 60 minutes for the IELTS Writing test generally be divided between Task 1 and Task 2?",
+    "expected_answer": "Spend about 20 minutes on Task 1 and about 40 minutes on Task 2.",
+    "expected_context": "ielts_academic_writing_sample_tasks_2023.md: Task 1 requires 150 words in about 20 minutes, while Task 2 requires 250 words in about 40 minutes."
+  },
+  {
+    "question": "What is the minimum word count for IELTS Academic Writing Task 1?",
+    "expected_answer": "The minimum is 150 words.",
+    "expected_context": "ielts_academic_writing_sample_tasks_2023.md: In Task 1, test takers describe visual information and need to write 150 words in about 20 minutes."
+  },
+  {
+    "question": "What is the minimum word count for IELTS Writing Task 2?",
+    "expected_answer": "Candidates must write at least 250 words.",
+    "expected_context": "ielts_academic_writing_sample_tasks_2023.md: In Task 2, test takers respond to a point of view, argument, or problem and need to write 250 words in about 40 minutes."
+  },
+  {
+    "question": "What structure is generally recommended for an IELTS Task 2 essay?",
+    "expected_answer": "Use an introduction, two or three body paragraphs with one main issue or idea each, and a conclusion.",
+    "expected_context": "article_02.md: The suggested outline contains an introduction, two or three body paragraphs, and a conclusion."
+  },
+  {
+    "question": "Should a linking word be placed in every sentence of an IELTS essay?",
+    "expected_answer": "No. Linking words should be used only where they are necessary and appropriate.",
+    "expected_context": "article_02.md: Essays score higher when the writer uses linking words only where necessary and appropriate."
+  },
+  {
+    "question": "What sentence structures should a candidate mix in the first draft of an IELTS essay?",
+    "expected_answer": "The candidate should mix simple, complex, and compound sentences.",
+    "expected_context": "article_02.md: Use a mix of sentence structures such as simple sentences, complex sentences and compound sentences."
+  },
+  {
+    "question": "What should a writer do if a sentence is too long during editing?",
+    "expected_answer": "Split the sentence into smaller sentences.",
+    "expected_context": "article_02.md: A sentence may be too long if a breath is needed in the middle; try splitting it into smaller sentences."
+  },
+  {
+    "question": "Are bullet points or note form appropriate in IELTS Writing responses?",
+    "expected_answer": "No. Responses must be written as full, connected text; bullet points and note form can be penalised.",
+    "expected_context": "ielts_academic_writing_example_responses_examiner_comments.md: Responses are penalised if they are not written as full, connected text, including the use of bullet points or note form."
+  },
+  {
+    "question": "What does coherence mean in the IELTS Writing assessment criteria?",
+    "expected_answer": "Coherence is the logical sequencing and overall organisation and development of ideas.",
+    "expected_context": "ielts_academic_writing_example_responses_examiner_comments.md: Coherence refers to the linking of ideas through logical sequencing."
+  },
+  {
+    "question": "What are the three kinds of IELTS solution essays described in the guide?",
+    "expected_answer": "They are the Solution Essay, Cause Solution Essay, and Problem Solution Essay.",
+    "expected_context": "article_05.md: The Types of IELTS Solution Essay section lists Solution Essay, Cause Solution Essay, and Problem Solution Essay."
+  },
+  {
+    "question": "What two main causes of reoffending are identified in the model solution essay?",
+    "expected_answer": "The essay identifies a lack of rehabilitation in prison and difficulty finding regular employment after release.",
+    "expected_context": "article_05.md: Reoffending is attributed mainly to the lack of rehabilitation and difficulty finding regular employment once released."
+  }
+]
