@@ -2,7 +2,7 @@
 
 **Source:** https://ielts.idp.com/results/scores/writing
 
-**Crawled:** 2026-09-20T14:48:17.169292
+**Crawled:** 2026-09-20T14:55:33.587691
 
 **Landing file:** data/landing/news/article_01.json
 

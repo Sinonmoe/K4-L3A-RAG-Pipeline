@@ -2,7 +2,7 @@
 
 **Source:** https://ielts.org/news-and-insights/10-steps-to-writing-high-scoring-ielts-essays
 
-**Crawled:** 2026-09-20T14:48:17.662447
+**Crawled:** 2026-09-20T14:55:36.294274
 
 **Landing file:** data/landing/news/article_02.json
 

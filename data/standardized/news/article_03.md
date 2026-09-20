@@ -2,7 +2,7 @@
 
 **Source:** https://ieltsliz.com/ielts-writing-task-2/
 
-**Crawled:** 2026-09-20T14:48:18.827314
+**Crawled:** 2026-09-20T14:55:40.239189
 
 **Landing file:** data/landing/news/article_03.json
 
