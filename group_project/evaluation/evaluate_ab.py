@@ -1,152 +1,205 @@
-"""Reproducible offline A/B evaluation for the IELTS Writing corpus."""
+"""A/B evaluation with OpenAI models and RAGAS 0.4.3.
+
+Config A: dense-only (OpenAI embeddings + Chroma cosine).
+Config B: hybrid = dense top 2k + BM25 top 2k fused by RRF.
+Golden set, generator, prompt, evaluator and top_k are identical for both configs.
+
+Run from the repository root:
+    python -m group_project.evaluation.evaluate_ab
+
+Requires OPENAI_API_KEY, LLM_MODEL, EMBEDDING_PROVIDER=openai and EMBEDDING_MODEL in .env.
+The vector index is built in a temporary directory, so ./chroma_db is not touched.
+"""
 
 import json
-import re
+import os
+import subprocess
+import sys
+import tempfile
 import time
+from datetime import date
 from pathlib import Path
 
-import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+ROOT = Path(__file__).parents[2]
+sys.path.insert(0, str(ROOT))
 
-from src.task4_chunking_indexing import chunk_documents, load_documents
+from dotenv import load_dotenv
+
+load_dotenv(ROOT / ".env")
+
+import ragas
+import tiktoken
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from ragas import EvaluationDataset, evaluate
+from ragas.embeddings import LangchainEmbeddingsWrapper
+from ragas.llms import LangchainLLMWrapper
+from ragas.metrics import (
+    Faithfulness,
+    LLMContextPrecisionWithReference,
+    LLMContextRecall,
+    ResponseRelevancy,
+)
+
+import src.task4_chunking_indexing as task4
+from src.task4_chunking_indexing import chunk_documents, embed_chunks, index_to_vectorstore, load_documents
+from src.task5_semantic_search import semantic_search
 from src.task6_lexical_search import lexical_search
 from src.task7_reranking import rerank_rrf
+from src.task10_generation import (
+    SAFE_REFUSAL,
+    SYSTEM_PROMPT,
+    _citations_match_sources,
+    _normalize_citations,
+    call_llm,
+    format_context,
+    reorder_for_llm,
+)
 
-
-ROOT = Path(__file__).parents[2]
 GOLDEN_PATH = Path(__file__).with_name("golden_dataset.json")
 OUTPUT_PATH = Path(__file__).with_name("ab_results.json")
 TOP_K = 5
+CONFIGS = ("dense-only", "hybrid-rrf")
+CALIBRATION_QUERIES = {
+    "in-domain": "IELTS writing task 2 band descriptors criteria",
+    "out-of-domain": "công thức nấu phở bò Hà Nội gia truyền",
+}
+# List prices, USD per 1M tokens (gpt-4o-mini input/output).
+PRICE_IN, PRICE_OUT = 0.15, 0.60
+INPUT_COLUMNS = {"user_input", "response", "retrieved_contexts", "reference"}
+
+LLM_MODEL = os.environ["LLM_MODEL"]
+EMBEDDING_MODEL = os.environ["EMBEDDING_MODEL"]
+ENCODER = tiktoken.get_encoding("o200k_base")
 
 
-def build_local_dense(corpus: list[dict]):
-    """Build a deterministic dense-like TF-IDF character index."""
-    vectorizer = TfidfVectorizer(analyzer="char_wb", ngram_range=(3, 5), min_df=1)
-    matrix = vectorizer.fit_transform(item["content"] for item in corpus)
-
-    def search(query: str, top_k: int) -> list[dict]:
-        scores = cosine_similarity(vectorizer.transform([query]), matrix).ravel()
-        indices = np.argsort(scores)[::-1][:top_k]
-        return [
-            {
-                "id": corpus[index]["id"],
-                "content": corpus[index]["content"],
-                "score": float(scores[index]),
-                "metadata": corpus[index]["metadata"],
-                "retrieval_method": "dense",
-            }
-            for index in indices
-            if scores[index] > 0
-        ]
-
-    return search
+def count_tokens(text: str) -> int:
+    return len(ENCODER.encode(text))
 
 
-def tokens(text: str) -> set[str]:
-    return set(re.findall(r"[a-z0-9]+", text.lower()))
+def build_index() -> int:
+    """Embed the standardized corpus with OpenAI into a throwaway Chroma dir."""
+    task4.CHROMA_DIR = Path(tempfile.mkdtemp(prefix="eval_chroma_"))
+    task4._chroma_client = None
+    chunks = chunk_documents(load_documents())
+    index_to_vectorstore(embed_chunks(chunks))
+    return len(chunks)
 
 
-def extractive_answer(question: str, contexts: list[dict]) -> str:
-    sentences = []
-    for item in contexts:
-        sentences.extend(
-            part.strip()
-            for part in re.split(r"(?<=[.!?])\s+|\n+", item["content"])
-            if len(part.split()) >= 4
-        )
-    if not sentences:
-        return ""
-    matrix = TfidfVectorizer(stop_words="english").fit_transform([question, *sentences])
-    scores = cosine_similarity(matrix[0:1], matrix[1:]).ravel()
-    return sentences[int(np.argmax(scores))]
+def retrieve(config: str, query: str) -> list[dict]:
+    dense = semantic_search(query, top_k=TOP_K * 2)
+    if config == "dense-only":
+        return dense[:TOP_K]
+    return rerank_rrf([dense, lexical_search(query, top_k=TOP_K * 2)], top_k=TOP_K)
 
 
-def semantic_similarity(left: str, right: str) -> float:
-    if not left.strip() or not right.strip():
-        return 0.0
-    matrix = TfidfVectorizer(stop_words="english").fit_transform([left, right])
-    return float(cosine_similarity(matrix[0:1], matrix[1:2])[0, 0])
-
-
-def evaluate_case(case: dict, contexts: list[dict]) -> dict:
-    answer = extractive_answer(case["question"], contexts)
-    joined_context = " ".join(item["content"] for item in contexts)
-    answer_tokens = tokens(answer)
-    context_tokens = tokens(joined_context)
-    expected_tokens = tokens(case["expected_answer"])
-    expected_source = case["expected_context"].split(":", 1)[0].strip()
-
-    faithfulness = (
-        len(answer_tokens & context_tokens) / len(answer_tokens) if answer_tokens else 0.0
+def generate(query: str, chunks: list[dict]) -> tuple[str, int, int]:
+    """Same steps as generate_with_citation, applied to already-retrieved chunks."""
+    context = format_context(reorder_for_llm(chunks))
+    user_message = (
+        f"Context:\n{context}\n\n"
+        f"Câu hỏi: {query}\n\n"
+        "Hãy trả lời ngắn gọn và trích dẫn bằng đúng ID đặt trong dấu ngoặc vuông."
     )
-    recall = (
-        len(expected_tokens & context_tokens) / len(expected_tokens)
-        if expected_tokens
-        else 0.0
-    )
-    precision = (
-        sum(item["metadata"]["source"] == expected_source for item in contexts)
-        / len(contexts)
-        if contexts
-        else 0.0
-    )
-    return {
-        "question": case["question"],
-        "answer": answer,
-        "sources": [item["metadata"]["source"] for item in contexts],
-        "faithfulness": faithfulness,
-        "answer_relevance": semantic_similarity(answer, case["expected_answer"]),
-        "context_recall": recall,
-        "context_precision": precision,
-    }
+    answer = call_llm(SYSTEM_PROMPT, user_message)
+    prompt_tokens = count_tokens(SYSTEM_PROMPT + user_message)
+    completion_tokens = count_tokens(answer)
+    if answer != SAFE_REFUSAL:
+        answer = _normalize_citations(answer, chunks)
+        if not _citations_match_sources(answer, chunks):
+            answer = SAFE_REFUSAL
+    return answer, prompt_tokens, completion_tokens
+
+
+def git(*args: str) -> str:
+    return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True).stdout.strip()
 
 
 def main() -> None:
-    dataset = json.loads(GOLDEN_PATH.read_text(encoding="utf-8"))
-    corpus = chunk_documents(load_documents())
-    local_dense_search = build_local_dense(corpus)
+    golden = json.loads(GOLDEN_PATH.read_text(encoding="utf-8"))
+    n_chunks = build_index()
     output = {
-        "method": "offline-proxy-v1-tfidf-char-3-5",
+        "date": date.today().isoformat(),
+        "framework": f"ragas {ragas.__version__}",
+        "generator_model": LLM_MODEL,
+        "evaluator_model": LLM_MODEL,
+        "embedding_model": EMBEDDING_MODEL,
         "top_k": TOP_K,
-        "corpus_chunks": len(corpus),
+        "golden_size": len(golden),
+        "corpus_chunks": n_chunks,
+        "corpus_commit": git("log", "-1", "--format=%h", "--", "data/standardized"),
+        "code_commit": git("rev-parse", "--short", "HEAD"),
+        "calibration_scores": {
+            name: semantic_search(query, top_k=1)[0]["score"]
+            for name, query in CALIBRATION_QUERIES.items()
+        },
         "configs": {},
     }
 
-    for config in ("dense-only", "hybrid-rrf"):
-        started = time.perf_counter()
-        cases = []
-        for case in dataset:
-            dense = local_dense_search(case["question"], top_k=TOP_K * 2)
-            if config == "dense-only":
-                contexts = dense[:TOP_K]
-            else:
-                sparse = lexical_search(case["question"], top_k=TOP_K * 2)
-                contexts = rerank_rrf([dense, sparse], top_k=TOP_K)
-            cases.append(evaluate_case(case, contexts))
+    evaluator_llm = LangchainLLMWrapper(ChatOpenAI(model=LLM_MODEL, temperature=0))
+    evaluator_emb = LangchainEmbeddingsWrapper(OpenAIEmbeddings(model=EMBEDDING_MODEL))
+    metrics = [
+        Faithfulness(),
+        ResponseRelevancy(),
+        LLMContextRecall(),
+        LLMContextPrecisionWithReference(),
+    ]
 
-        metric_names = (
-            "faithfulness",
-            "answer_relevance",
-            "context_recall",
-            "context_precision",
-        )
+    for config in CONFIGS:
+        rows, cases = [], []
+        retrieval_s = generation_s = 0.0
+        tok_in = tok_out = 0
+        for case in golden:
+            started = time.perf_counter()
+            chunks = retrieve(config, case["question"])
+            retrieval_s += time.perf_counter() - started
+
+            started = time.perf_counter()
+            answer, prompt_tokens, completion_tokens = generate(case["question"], chunks)
+            generation_s += time.perf_counter() - started
+            tok_in += prompt_tokens
+            tok_out += completion_tokens
+
+            rows.append({
+                "user_input": case["question"],
+                "response": answer,
+                "retrieved_contexts": [c["content"] for c in chunks],
+                "reference": case["expected_answer"],
+            })
+            cases.append({
+                "question": case["question"],
+                "expected_context": case["expected_context"],
+                "answer": answer,
+                "retrieved_ids": [c["id"] for c in chunks],
+                "retrieved_sources": [c["metadata"]["source"] for c in chunks],
+            })
+
+        frame = evaluate(
+            EvaluationDataset.from_list(rows),
+            metrics=metrics,
+            llm=evaluator_llm,
+            embeddings=evaluator_emb,
+            show_progress=False,
+        ).to_pandas()
+        score_columns = [c for c in frame.columns if c not in INPUT_COLUMNS]
+        for case, (_, row) in zip(cases, frame.iterrows()):
+            case["scores"] = {
+                column: None if row[column] != row[column] else float(row[column])
+                for column in score_columns
+            }
+
         output["configs"][config] = {
-            "metrics": {
-                name: float(np.mean([case[name] for case in cases]))
-                for name in metric_names
-            },
-            "elapsed_seconds": time.perf_counter() - started,
+            "metrics": {column: float(frame[column].mean()) for column in score_columns},
+            "nan_counts": {column: int(frame[column].isna().sum()) for column in score_columns},
+            "retrieval_seconds": retrieval_s,
+            "generation_seconds": generation_s,
+            "generator_tokens": {"input": tok_in, "output": tok_out},
+            "generator_cost_usd": tok_in / 1e6 * PRICE_IN + tok_out / 1e6 * PRICE_OUT,
             "cases": cases,
         }
+        print(config, json.dumps(output["configs"][config]["metrics"], indent=2))
 
-    OUTPUT_PATH.write_text(
-        json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    print(json.dumps({
-        name: {"metrics": value["metrics"], "elapsed_seconds": value["elapsed_seconds"]}
-        for name, value in output["configs"].items()
-    }, indent=2))
+    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"Saved {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":

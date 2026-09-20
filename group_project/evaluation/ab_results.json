@@ -1,477 +1,812 @@
 {
-  "method": "offline-proxy-v1-tfidf-char-3-5",
+  "date": "2026-09-20",
+  "framework": "ragas 0.4.3",
+  "generator_model": "gpt-4o-mini",
+  "evaluator_model": "gpt-4o-mini",
+  "embedding_model": "text-embedding-3-small",
   "top_k": 5,
+  "golden_size": 15,
   "corpus_chunks": 283,
+  "corpus_commit": "29fa48d",
+  "code_commit": "bfa3653",
+  "calibration_scores": {
+    "in-domain": 0.8249702453613281,
+    "out-of-domain": 0.22735506296157837
+  },
   "configs": {
     "dense-only": {
       "metrics": {
-        "faithfulness": 1.0,
-        "answer_relevance": 0.13745251450041335,
-        "context_recall": 0.7682031149678209,
-        "context_precision": 0.37333333333333335
+        "faithfulness": 0.6688888888888889,
+        "answer_relevancy": 0.8521689381590787,
+        "context_recall": 0.9,
+        "llm_context_precision_with_reference": 0.736203703659453
       },
-      "elapsed_seconds": 0.13192960000014864,
+      "nan_counts": {
+        "faithfulness": 0,
+        "answer_relevancy": 0,
+        "context_recall": 0,
+        "llm_context_precision_with_reference": 0
+      },
+      "retrieval_seconds": 7.625107750005554,
+      "generation_seconds": 21.840071126935072,
+      "generator_tokens": {
+        "input": 12412,
+        "output": 1064
+      },
+      "generator_cost_usd": 0.0025001999999999997,
       "cases": [
         {
           "question": "How many examiners mark an IELTS Writing test?",
-          "answer": "These qualified examiners mark your Writing test against clearly defined assessment criteria and their performance is subject to an extensive and detailed review on a regular basis.",
-          "sources": [
+          "expected_context": "article_01.md: Your Writing test is marked by between 2 and 4 examiners to ensure accuracy and fairness.",
+          "answer": "Một bài kiểm tra Writing IELTS được chấm bởi từ 2 đến 4 giám khảo để đảm bảo độ chính xác và công bằng cao nhất trong việc chấm điểm. [news/article_01.md::chunk-3]",
+          "retrieved_ids": [
+            "news/article_01.md::chunk-2",
+            "news/article_01.md::chunk-3",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-18",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-7",
+            "news/article_01.md::chunk-22"
+          ],
+          "retrieved_sources": [
             "article_01.md",
             "article_01.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "article_01.md"
+          ],
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.9559632277174507,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.49999999995
+          }
+        },
+        {
+          "question": "What four criteria are used to assess IELTS Writing Task 1?",
+          "expected_context": "ielts_academic_writing_example_responses_examiner_comments.md: Task 1 responses are assessed on Task Achievement, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy.",
+          "answer": "IELTS Writing Task 1 is assessed on the following four criteria: task achievement, coherence and cohesion, lexical resource, and grammatical range and accuracy [news/article_01.md::chunk-4].",
+          "retrieved_ids": [
+            "news/article_01.md::chunk-4",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-11",
+            "news/article_01.md::chunk-5",
+            "news/article_02.md::chunk-2",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-1"
+          ],
+          "retrieved_sources": [
+            "article_01.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_01.md",
+            "article_02.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md"
+          ],
+          "scores": {
+            "faithfulness": 0.2,
+            "answer_relevancy": 0.9134803271366764,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.8874999999778125
+          }
+        },
+        {
+          "question": "What criterion replaces Task Achievement when IELTS Writing Task 2 is assessed?",
+          "expected_context": "article_01.md: Writing Task 2 is assessed in much the same way as Task 1 except for the Task Response criterion.",
+          "answer": "Criterion thay thế Task Achievement khi đánh giá IELTS Writing Task 2 là Task Response. [news/article_01.md::chunk-4]",
+          "retrieved_ids": [
+            "news/article_01.md::chunk-4",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-11",
+            "legal/ielts_writing_band_descriptors.md::chunk-13",
+            "legal/ielts_writing_band_descriptors.md::chunk-23",
+            "legal/ielts_writing_band_descriptors.md::chunk-1"
+          ],
+          "retrieved_sources": [
+            "article_01.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_writing_band_descriptors.md",
+            "ielts_writing_band_descriptors.md",
+            "ielts_writing_band_descriptors.md"
+          ],
+          "scores": {
+            "faithfulness": 0.0,
+            "answer_relevancy": 0.9704666152403085,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.8055555555287036
+          }
+        },
+        {
+          "question": "How much does each assessment criterion contribute to the IELTS essay score?",
+          "expected_context": "article_02.md: Each of these criteria is worth 25 percent of your total score for the essay writing task.",
+          "answer": "Mỗi tiêu chí đánh giá trong bài viết IELTS đều chiếm 25% tổng điểm cho nhiệm vụ viết bài. Cả hai nhiệm vụ viết đều được sử dụng để tính toán điểm band viết tổng thể của bạn [news/article_02.md::chunk-5].",
+          "retrieved_ids": [
+            "news/article_01.md::chunk-4",
+            "news/article_02.md::chunk-2",
+            "news/article_01.md::chunk-1",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-11",
+            "news/article_02.md::chunk-5"
+          ],
+          "retrieved_sources": [
+            "article_01.md",
+            "article_02.md",
             "article_01.md",
             "ielts_academic_writing_sample_tasks_2023.md",
             "article_02.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.21248275333494782,
-          "context_recall": 0.9166666666666666,
-          "context_precision": 0.6
-        },
-        {
-          "question": "What four criteria are used to assess IELTS Writing Task 1?",
-          "answer": "Can you explain the Task response criteria in IELTS Writing?",
-          "sources": [
-            "article_01.md",
-            "article_01.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md",
-            "article_01.md"
-          ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.07397129483465995,
-          "context_recall": 1.0,
-          "context_precision": 0.2
-        },
-        {
-          "question": "What criterion replaces Task Achievement when IELTS Writing Task 2 is assessed?",
-          "answer": "Writing Task 2 is assessed in much the same way except for the task response criterion.",
-          "sources": [
-            "article_01.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md"
-          ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.387556981443423,
-          "context_recall": 0.6,
-          "context_precision": 0.2
-        },
-        {
-          "question": "How much does each assessment criterion contribute to the IELTS essay score?",
-          "answer": "Use them as a guide to create an essay suitable for a high band score in IELTS.",
-          "sources": [
-            "article_01.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "article_03.md",
-            "article_01.md"
-          ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.14587439082056453,
-          "context_recall": 0.7272727272727273,
-          "context_precision": 0.0
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.8149327757104426,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.699999999965
+          }
         },
         {
           "question": "How should the 60 minutes for the IELTS Writing test generally be divided between Task 1 and Task 2?",
-          "answer": "The Writing test (consisting of Writing tasks 1 and 2) takes approximately 60 minutes.",
-          "sources": [
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "article_02.md",
-            "article_01.md",
-            "article_01.md"
+          "expected_context": "ielts_academic_writing_sample_tasks_2023.md: Task 1 requires 150 words in about 20 minutes, while Task 2 requires 250 words in about 40 minutes.",
+          "answer": "Tôi không thể xác minh thông tin này từ các nguồn hiện có.",
+          "retrieved_ids": [
+            "news/article_03.md::chunk-3",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-11",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-0",
+            "news/article_03.md::chunk-4",
+            "news/article_05.md::chunk-1"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.10397839113249145,
-          "context_recall": 1.0,
-          "context_precision": 0.4
+          "retrieved_sources": [
+            "article_03.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_03.md",
+            "article_05.md"
+          ],
+          "scores": {
+            "faithfulness": 0.0,
+            "answer_relevancy": 0.0,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.999999999975
+          }
         },
         {
           "question": "What is the minimum word count for IELTS Academic Writing Task 1?",
-          "answer": "Sample Academic Writing Part 1",
-          "sources": [
-            "article_05.md",
+          "expected_context": "ielts_academic_writing_sample_tasks_2023.md: In Task 1, test takers describe visual information and need to write 150 words in about 20 minutes.",
+          "answer": "Minimum word count for IELTS Academic Writing Task 1 is 150 words [legal/ielts_academic_writing_sample_tasks_2023.md::chunk-0].",
+          "retrieved_ids": [
+            "news/article_03.md::chunk-3",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-0",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-11",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-8",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-30"
+          ],
+          "retrieved_sources": [
+            "article_03.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
             "ielts_academic_writing_sample_tasks_2023.md",
             "ielts_academic_writing_example_responses_examiner_comments.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md"
+            "ielts_academic_writing_sample_tasks_2023.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.0,
-          "context_recall": 1.0,
-          "context_precision": 0.4
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 1.0,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.49999999995
+          }
         },
         {
           "question": "What is the minimum word count for IELTS Writing Task 2?",
-          "answer": "minimum word count for Task 2 of 250 words, so there is room for further development.",
-          "sources": [
-            "article_05.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md"
+          "expected_context": "ielts_academic_writing_sample_tasks_2023.md: In Task 2, test takers respond to a point of view, argument, or problem and need to write 250 words in about 40 minutes.",
+          "answer": "Minimum word count for IELTS Writing Task 2 is 250 words, as stated in the instructions that say “write at least 250 words” [news/article_03.md::chunk-3].",
+          "retrieved_ids": [
+            "news/article_03.md::chunk-3",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-0",
+            "news/article_03.md::chunk-4",
+            "news/article_03.md::chunk-15",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-11"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.22028815056182974,
-          "context_recall": 0.42857142857142855,
-          "context_precision": 0.4
+          "retrieved_sources": [
+            "article_03.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_03.md",
+            "article_03.md",
+            "ielts_academic_writing_sample_tasks_2023.md"
+          ],
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 1.0,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.99999999995
+          }
         },
         {
           "question": "What structure is generally recommended for an IELTS Task 2 essay?",
-          "answer": "**[Essay Structure & Paragraphing](https://ieltsliz.com/how-many-paragraphs-for-an-ielts-essay/)**",
-          "sources": [
-            "article_03.md",
-            "article_03.md",
-            "article_05.md",
-            "ielts_writing_band_descriptors.md",
-            "ielts_academic_writing_sample_tasks_2023.md"
+          "expected_context": "article_02.md: The suggested outline contains an introduction, two or three body paragraphs, and a conclusion.",
+          "answer": "Cấu trúc được khuyến nghị cho một bài luận Task 2 trong IELTS thường bao gồm các phần như giới thiệu, thân bài và kết luận. Bạn nên viết ít nhất 250 từ và sử dụng ngôn ngữ trang trọng. [news/article_03.md::chunk-3]",
+          "retrieved_ids": [
+            "news/article_05.md::chunk-1",
+            "news/article_03.md::chunk-5",
+            "news/article_03.md::chunk-8",
+            "news/article_03.md::chunk-3",
+            "news/article_02.md::chunk-1"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.0570065534192356,
-          "context_recall": 0.6470588235294118,
-          "context_precision": 0.0
+          "retrieved_sources": [
+            "article_05.md",
+            "article_03.md",
+            "article_03.md",
+            "article_03.md",
+            "article_02.md"
+          ],
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.937049350585205,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.3333333333
+          }
         },
         {
           "question": "Should a linking word be placed in every sentence of an IELTS essay?",
-          "answer": "Don’t fall into the trap of trying to put a linking word in every sentence.",
-          "sources": [
-            "article_02.md",
-            "article_03.md",
-            "article_02.md",
-            "article_03.md",
-            "article_05.md"
+          "expected_context": "article_02.md: Essays score higher when the writer uses linking words only where necessary and appropriate.",
+          "answer": "Không, không nên đặt một từ liên kết trong mỗi câu của một bài luận IELTS. Các bài luận sẽ ghi điểm cao hơn khi người viết sử dụng từ liên kết chỉ khi cần thiết và phù hợp. [news/article_02.md::chunk-14]",
+          "retrieved_ids": [
+            "news/article_03.md::chunk-9",
+            "news/article_02.md::chunk-13",
+            "news/article_04.md::chunk-10",
+            "news/article_02.md::chunk-15",
+            "news/article_02.md::chunk-14"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.09349477497536716,
-          "context_recall": 0.8461538461538461,
-          "context_precision": 0.4
+          "retrieved_sources": [
+            "article_03.md",
+            "article_02.md",
+            "article_04.md",
+            "article_02.md",
+            "article_02.md"
+          ],
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.9999999999999997,
+            "context_recall": 0.5,
+            "llm_context_precision_with_reference": 0.4499999999775
+          }
         },
         {
           "question": "What sentence structures should a candidate mix in the first draft of an IELTS essay?",
-          "answer": "candidate’s writing at sentence level.",
-          "sources": [
-            "article_03.md",
+          "expected_context": "article_02.md: Use a mix of sentence structures such as simple sentences, complex sentences and compound sentences.",
+          "answer": "Một ứng viên nên sử dụng sự kết hợp của các cấu trúc câu như câu đơn, câu phức và câu ghép trong bản nháp đầu tiên của một bài luận IELTS [news/article_02.md::chunk-15].",
+          "retrieved_ids": [
+            "news/article_02.md::chunk-15",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-8",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-40",
+            "news/article_03.md::chunk-6",
+            "news/article_02.md::chunk-1"
+          ],
+          "retrieved_sources": [
             "article_02.md",
             "ielts_academic_writing_example_responses_examiner_comments.md",
             "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md"
+            "article_03.md",
+            "article_02.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.11521554337793122,
-          "context_recall": 0.4444444444444444,
-          "context_precision": 0.2
+          "scores": {
+            "faithfulness": 0.6666666666666666,
+            "answer_relevancy": 0.9378380532811675,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.9999999999
+          }
         },
         {
           "question": "What should a writer do if a sentence is too long during editing?",
-          "answer": "* **The sentence is too long.** A sentence is probably too long if you need to take a breath in the middle of reading it.",
-          "sources": [
-            "article_02.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "article_02.md",
-            "ielts_academic_writing_sample_tasks_2023.md"
+          "expected_context": "article_02.md: A sentence may be too long if a breath is needed in the middle; try splitting it into smaller sentences.",
+          "answer": "A writer should split the long sentence into smaller sentences if it is too long. This can be determined if they need to take a breath in the middle of reading it. [news/article_02.md::chunk-19]",
+          "retrieved_ids": [
+            "news/article_02.md::chunk-19",
+            "news/article_02.md::chunk-18",
+            "news/article_02.md::chunk-20",
+            "legal/ielts_writing_band_descriptors.md::chunk-21",
+            "news/article_02.md::chunk-21"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.16284707754470526,
-          "context_recall": 0.8333333333333334,
-          "context_precision": 0.4
+          "retrieved_sources": [
+            "article_02.md",
+            "article_02.md",
+            "article_02.md",
+            "ielts_writing_band_descriptors.md",
+            "article_02.md"
+          ],
+          "scores": {
+            "faithfulness": 0.5,
+            "answer_relevancy": 0.6621210401518395,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.9999999999
+          }
         },
         {
           "question": "Are bullet points or note form appropriate in IELTS Writing responses?",
-          "answer": "response, or note form, is not appropriate).",
-          "sources": [
-            "ielts_academic_writing_example_responses_examiner_comments.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_writing_band_descriptors.md",
-            "ielts_writing_band_descriptors.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md"
+          "expected_context": "ielts_academic_writing_example_responses_examiner_comments.md: Responses are penalised if they are not written as full, connected text, including the use of bullet points or note form.",
+          "answer": "Không, bullet points hoặc dạng ghi chú không được coi là phù hợp trong các phản hồi IELTS Writing. Thay vào đó, các bài viết nên được trình bày dưới dạng văn bản liên tục để đạt điểm cao. [news/article_01.md::chunk-5]",
+          "retrieved_ids": [
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-8",
+            "news/article_04.md::chunk-10",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-7",
+            "news/article_01.md::chunk-5",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-27"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.20608363501393825,
-          "context_recall": 0.875,
-          "context_precision": 0.4
+          "retrieved_sources": [
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "article_04.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "article_01.md",
+            "ielts_academic_writing_sample_tasks_2023.md"
+          ],
+          "scores": {
+            "faithfulness": 0.0,
+            "answer_relevancy": 0.9207606174387127,
+            "context_recall": 0.0,
+            "llm_context_precision_with_reference": 0.0
+          }
         },
         {
           "question": "What does coherence mean in the IELTS Writing assessment criteria?",
-          "answer": "To find out more about the assessment criteria used by IELTS examiners, search online for the IELTS Writing public band descriptors.",
-          "sources": [
+          "expected_context": "ielts_academic_writing_example_responses_examiner_comments.md: Coherence refers to the linking of ideas through logical sequencing.",
+          "answer": "Coherence trong tiêu chí đánh giá viết IELTS đề cập đến việc liên kết các ý tưởng thông qua việc sắp xếp hợp lý. Nó liên quan đến cách mà phản hồi tổ chức và liên kết thông tin, ý tưởng và ngôn ngữ. [legal/ielts_academic_writing_sample_tasks_2023.md::chunk-15]",
+          "retrieved_ids": [
+            "news/article_01.md::chunk-4",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-4",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-15",
+            "legal/ielts_writing_band_descriptors.md::chunk-36",
+            "news/article_02.md::chunk-3"
+          ],
+          "retrieved_sources": [
             "article_01.md",
             "ielts_academic_writing_example_responses_examiner_comments.md",
             "ielts_academic_writing_sample_tasks_2023.md",
-            "article_01.md",
-            "article_01.md"
+            "ielts_writing_band_descriptors.md",
+            "article_02.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.0,
-          "context_recall": 0.45454545454545453,
-          "context_precision": 0.2
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.9831313748180998,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.99999999998
+          }
         },
         {
           "question": "What are the three kinds of IELTS solution essays described in the guide?",
-          "answer": "There are three kinds of IELTS solution essays.",
-          "sources": [
-            "article_05.md",
-            "article_05.md",
-            "article_05.md",
-            "article_05.md",
-            "article_03.md"
+          "expected_context": "article_05.md: The Types of IELTS Solution Essay section lists Solution Essay, Cause Solution Essay, and Problem Solution Essay.",
+          "answer": "Ba loại bài luận giải pháp IELTS được mô tả trong hướng dẫn là:\n\n1. **Solution Essay**\n2. **Cause Solution Essay**\n3. **Problem Solution Essay** \n\n[news/article_05.md::chunk-2]",
+          "retrieved_ids": [
+            "news/article_05.md::chunk-2",
+            "news/article_05.md::chunk-1",
+            "news/article_03.md::chunk-6",
+            "news/article_02.md::chunk-1",
+            "news/article_05.md::chunk-4"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.20564035870341515,
-          "context_recall": 0.875,
-          "context_precision": 0.8
+          "retrieved_sources": [
+            "article_05.md",
+            "article_05.md",
+            "article_03.md",
+            "article_02.md",
+            "article_05.md"
+          ],
+          "scores": {
+            "faithfulness": 0.6666666666666666,
+            "answer_relevancy": 0.8754816211800325,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.8666666666377778
+          }
         },
         {
           "question": "What two main causes of reoffending are identified in the model solution essay?",
-          "answer": "## IELTS Solution Essay Model Answer",
-          "sources": [
+          "expected_context": "article_05.md: Reoffending is attributed mainly to the lack of rehabilitation and difficulty finding regular employment once released.",
+          "answer": "Hai nguyên nhân chính của việc tái phạm được xác định trong bài luận mẫu là thiếu sự phục hồi và khó khăn trong việc tìm kiếm việc làm sau khi ra tù [news/article_05.md::chunk-9].",
+          "retrieved_ids": [
+            "news/article_05.md::chunk-9",
+            "news/article_05.md::chunk-12",
+            "news/article_05.md::chunk-11",
+            "news/article_05.md::chunk-14",
+            "news/article_05.md::chunk-13"
+          ],
+          "retrieved_sources": [
             "article_05.md",
             "article_05.md",
             "article_05.md",
             "article_05.md",
             "article_05.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.07734781234369076,
-          "context_recall": 0.875,
-          "context_precision": 1.0
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.8113090691262433,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.9999999999
+          }
         }
       ]
     },
     "hybrid-rrf": {
       "metrics": {
-        "faithfulness": 1.0,
-        "answer_relevance": 0.16529490615700365,
-        "context_recall": 0.7888483303189187,
-        "context_precision": 0.37333333333333335
+        "faithfulness": 0.7388888888888889,
+        "answer_relevancy": 0.8058807152157869,
+        "context_recall": 0.8666666666666667,
+        "llm_context_precision_with_reference": 0.7285185184716049
       },
-      "elapsed_seconds": 0.2613499999988562,
+      "nan_counts": {
+        "faithfulness": 0,
+        "answer_relevancy": 0,
+        "context_recall": 0,
+        "llm_context_precision_with_reference": 0
+      },
+      "retrieval_seconds": 6.86637512705056,
+      "generation_seconds": 22.61045191908488,
+      "generator_tokens": {
+        "input": 12768,
+        "output": 1046
+      },
+      "generator_cost_usd": 0.0025428,
       "cases": [
         {
           "question": "How many examiners mark an IELTS Writing test?",
-          "answer": "These qualified examiners mark your Writing test against clearly defined assessment criteria and their performance is subject to an extensive and detailed review on a regular basis.",
-          "sources": [
+          "expected_context": "article_01.md: Your Writing test is marked by between 2 and 4 examiners to ensure accuracy and fairness.",
+          "answer": "Một bài kiểm tra Writing IELTS được chấm bởi từ 2 đến 4 giám khảo để đảm bảo độ chính xác và công bằng cao nhất trong việc chấm điểm. [news/article_01.md::chunk-3]",
+          "retrieved_ids": [
+            "news/article_01.md::chunk-2",
+            "news/article_01.md::chunk-1",
+            "news/article_01.md::chunk-3",
+            "news/article_02.md::chunk-2",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-18"
+          ],
+          "retrieved_sources": [
+            "article_01.md",
             "article_01.md",
             "article_01.md",
             "article_02.md",
-            "article_03.md",
-            "article_01.md"
+            "ielts_academic_writing_sample_tasks_2023.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.21248275333494782,
-          "context_recall": 1.0,
-          "context_precision": 0.6
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.9559632277174507,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.4166666666458333
+          }
         },
         {
           "question": "What four criteria are used to assess IELTS Writing Task 1?",
-          "answer": "Can you explain the Task response criteria in IELTS Writing?",
-          "sources": [
-            "article_01.md",
-            "article_01.md",
-            "article_05.md",
-            "article_01.md",
-            "article_01.md"
+          "expected_context": "ielts_academic_writing_example_responses_examiner_comments.md: Task 1 responses are assessed on Task Achievement, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy.",
+          "answer": "Bốn tiêu chí được sử dụng để đánh giá IELTS Writing Task 1 là: task achievement, coherence and cohesion, lexical resource và grammatical range and accuracy [news/article_01.md::chunk-4].",
+          "retrieved_ids": [
+            "news/article_01.md::chunk-4",
+            "news/article_01.md::chunk-5",
+            "news/article_01.md::chunk-1",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-11",
+            "news/article_02.md::chunk-2"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.07397129483465995,
-          "context_recall": 1.0,
-          "context_precision": 0.0
+          "retrieved_sources": [
+            "article_01.md",
+            "article_01.md",
+            "article_01.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_02.md"
+          ],
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.9069948084851049,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.6999999999766667
+          }
         },
         {
           "question": "What criterion replaces Task Achievement when IELTS Writing Task 2 is assessed?",
-          "answer": "Writing Task 2 is assessed in much the same way except for the task response criterion.",
-          "sources": [
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "article_05.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md",
-            "article_01.md",
-            "article_03.md"
+          "expected_context": "article_01.md: Writing Task 2 is assessed in much the same way as Task 1 except for the Task Response criterion.",
+          "answer": "Khi IELTS Writing Task 2 được đánh giá, tiêu chí \"Task Achievement\" được thay thế bằng tiêu chí \"Task Response\" [legal/ielts_academic_writing_sample_tasks_2023.md::chunk-11].",
+          "retrieved_ids": [
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-13",
+            "news/article_01.md::chunk-4",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-11",
+            "news/article_03.md::chunk-5",
+            "legal/ielts_writing_band_descriptors.md::chunk-13"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.387556981443423,
-          "context_recall": 0.6,
-          "context_precision": 0.2
+          "retrieved_sources": [
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_01.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_03.md",
+            "ielts_writing_band_descriptors.md"
+          ],
+          "scores": {
+            "faithfulness": 0.0,
+            "answer_relevancy": 0.7406938144154327,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.4499999999775
+          }
         },
         {
           "question": "How much does each assessment criterion contribute to the IELTS essay score?",
-          "answer": "## How is the IELTS essay component marked?",
-          "sources": [
+          "expected_context": "article_02.md: Each of these criteria is worth 25 percent of your total score for the essay writing task.",
+          "answer": "Tôi không thể xác minh thông tin này từ các nguồn hiện có.",
+          "retrieved_ids": [
+            "news/article_01.md::chunk-4",
+            "news/article_02.md::chunk-1",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-11",
+            "news/article_02.md::chunk-2",
+            "news/article_01.md::chunk-1"
+          ],
+          "retrieved_sources": [
             "article_01.md",
             "article_02.md",
             "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "article_02.md"
+            "article_02.md",
+            "article_01.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.1059921313509325,
-          "context_recall": 0.7272727272727273,
-          "context_precision": 0.4
+          "scores": {
+            "faithfulness": 0.0,
+            "answer_relevancy": 0.0,
+            "context_recall": 0.0,
+            "llm_context_precision_with_reference": 0.9999999999
+          }
         },
         {
           "question": "How should the 60 minutes for the IELTS Writing test generally be divided between Task 1 and Task 2?",
-          "answer": "The Writing test (consisting of Writing tasks 1 and 2) takes approximately 60 minutes.",
-          "sources": [
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "article_02.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md"
+          "expected_context": "ielts_academic_writing_sample_tasks_2023.md: Task 1 requires 150 words in about 20 minutes, while Task 2 requires 250 words in about 40 minutes.",
+          "answer": "Tôi không thể xác minh thông tin này từ các nguồn hiện có.",
+          "retrieved_ids": [
+            "news/article_03.md::chunk-3",
+            "news/article_02.md::chunk-5",
+            "news/article_01.md::chunk-4",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-6",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-11"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.10397839113249145,
-          "context_recall": 1.0,
-          "context_precision": 0.6
+          "retrieved_sources": [
+            "article_03.md",
+            "article_02.md",
+            "article_01.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_sample_tasks_2023.md"
+          ],
+          "scores": {
+            "faithfulness": 0.0,
+            "answer_relevancy": 0.0,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.9166666666361111
+          }
         },
         {
           "question": "What is the minimum word count for IELTS Academic Writing Task 1?",
-          "answer": "minimum word count for Task 2 of 250 words, so there is room for further development.",
-          "sources": [
-            "article_05.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md",
-            "article_01.md"
+          "expected_context": "ielts_academic_writing_sample_tasks_2023.md: In Task 1, test takers describe visual information and need to write 150 words in about 20 minutes.",
+          "answer": "Minimum word count for IELTS Academic Writing Task 1 is 150 words [legal/ielts_academic_writing_sample_tasks_2023.md::chunk-0].",
+          "retrieved_ids": [
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-1",
+            "news/article_03.md::chunk-3",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-26",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-0",
+            "news/article_05.md::chunk-1"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.26951761324603224,
-          "context_recall": 0.8,
-          "context_precision": 0.2
+          "retrieved_sources": [
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_03.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_05.md"
+          ],
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 1.0,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.249999999975
+          }
         },
         {
           "question": "What is the minimum word count for IELTS Writing Task 2?",
-          "answer": "minimum word count for Task 2 of 250 words, so there is room for further development.",
-          "sources": [
-            "article_05.md",
+          "expected_context": "ielts_academic_writing_sample_tasks_2023.md: In Task 2, test takers respond to a point of view, argument, or problem and need to write 250 words in about 40 minutes.",
+          "answer": "Minimum word count for IELTS Writing Task 2 is 250 words, as stated in the instructions that say “write at least 250 words” [news/article_03.md::chunk-3].",
+          "retrieved_ids": [
+            "news/article_03.md::chunk-5",
+            "news/article_03.md::chunk-3",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-26",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-0",
+            "news/article_05.md::chunk-1"
+          ],
+          "retrieved_sources": [
+            "article_03.md",
+            "article_03.md",
             "ielts_academic_writing_example_responses_examiner_comments.md",
             "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "article_03.md"
+            "article_05.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.22028815056182974,
-          "context_recall": 0.42857142857142855,
-          "context_precision": 0.4
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.9999997430893875,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.6388888888675925
+          }
         },
         {
           "question": "What structure is generally recommended for an IELTS Task 2 essay?",
-          "answer": "**[Essay Structure & Paragraphing](https://ieltsliz.com/how-many-paragraphs-for-an-ielts-essay/)**",
-          "sources": [
-            "article_03.md",
+          "expected_context": "article_02.md: The suggested outline contains an introduction, two or three body paragraphs, and a conclusion.",
+          "answer": "Cấu trúc được khuyến nghị cho một bài luận IELTS Task 2 bao gồm một bài luận theo định dạng, cấu trúc và phong cách cụ thể, với các yêu cầu về điểm số. Các bài luận mẫu ở band 9 minh họa cách viết một bài luận cho nhiệm vụ viết 2 của IELTS. Bạn nên sử dụng chúng làm hướng dẫn để tạo ra một bài luận phù hợp với điểm số cao trong IELTS. [news/article_03.md::chunk-11]",
+          "retrieved_ids": [
+            "news/article_05.md::chunk-1",
+            "news/article_03.md::chunk-8",
+            "news/article_03.md::chunk-5",
+            "news/article_03.md::chunk-11",
+            "news/article_03.md::chunk-3"
+          ],
+          "retrieved_sources": [
             "article_05.md",
             "article_03.md",
-            "ielts_writing_band_descriptors.md",
-            "ielts_writing_band_descriptors.md"
+            "article_03.md",
+            "article_03.md",
+            "article_03.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.0570065534192356,
-          "context_recall": 0.7058823529411765,
-          "context_precision": 0.0
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.9585145029024638,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.249999999975
+          }
         },
         {
           "question": "Should a linking word be placed in every sentence of an IELTS essay?",
-          "answer": "Don’t fall into the trap of trying to put a linking word in every sentence.",
-          "sources": [
-            "article_02.md",
-            "article_03.md",
+          "expected_context": "article_02.md: Essays score higher when the writer uses linking words only where necessary and appropriate.",
+          "answer": "Không, không nên đặt một từ liên kết trong mỗi câu của một bài luận IELTS. Các bài luận sẽ được chấm điểm cao hơn khi người viết chỉ sử dụng từ liên kết ở những nơi cần thiết và phù hợp. [news/article_02.md::chunk-14]",
+          "retrieved_ids": [
+            "news/article_02.md::chunk-14",
+            "news/article_04.md::chunk-10",
+            "news/article_03.md::chunk-9",
+            "news/article_03.md::chunk-11",
+            "news/article_02.md::chunk-13"
+          ],
+          "retrieved_sources": [
             "article_02.md",
             "article_04.md",
-            "article_05.md"
+            "article_03.md",
+            "article_03.md",
+            "article_02.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.09349477497536716,
-          "context_recall": 0.7692307692307693,
-          "context_precision": 0.4
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.9999999999999997,
+            "context_recall": 0.5,
+            "llm_context_precision_with_reference": 0.9999999999
+          }
         },
         {
           "question": "What sentence structures should a candidate mix in the first draft of an IELTS essay?",
-          "answer": "There is a mix of",
-          "sources": [
+          "expected_context": "article_02.md: Use a mix of sentence structures such as simple sentences, complex sentences and compound sentences.",
+          "answer": "Một ứng viên nên kết hợp các cấu trúc câu như câu đơn, câu phức và câu ghép trong bản nháp đầu tiên của bài luận IELTS. [news/article_02.md::chunk-15]",
+          "retrieved_ids": [
+            "news/article_02.md::chunk-15",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-27",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-8",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-40",
+            "news/article_02.md::chunk-16"
+          ],
+          "retrieved_sources": [
             "article_02.md",
             "ielts_academic_writing_example_responses_examiner_comments.md",
-            "article_03.md",
             "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
             "article_02.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.3032160644503863,
-          "context_recall": 0.8888888888888888,
-          "context_precision": 0.4
+          "scores": {
+            "faithfulness": 0.75,
+            "answer_relevancy": 0.934585367806353,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.99999999995
+          }
         },
         {
           "question": "What should a writer do if a sentence is too long during editing?",
-          "answer": "* **The sentence is too long.** A sentence is probably too long if you need to take a breath in the middle of reading it.",
-          "sources": [
-            "article_02.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md",
-            "ielts_academic_writing_example_responses_examiner_comments.md",
-            "ielts_academic_writing_sample_tasks_2023.md"
+          "expected_context": "article_02.md: A sentence may be too long if a breath is needed in the middle; try splitting it into smaller sentences.",
+          "answer": "A writer should split the long sentence into smaller sentences if it is too long. [news/article_02.md::chunk-19]",
+          "retrieved_ids": [
+            "news/article_02.md::chunk-19",
+            "legal/ielts_writing_band_descriptors.md::chunk-16",
+            "news/article_02.md::chunk-18",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-27",
+            "news/article_02.md::chunk-20"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.16284707754470526,
-          "context_recall": 0.8333333333333334,
-          "context_precision": 0.2
+          "retrieved_sources": [
+            "article_02.md",
+            "ielts_writing_band_descriptors.md",
+            "article_02.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "article_02.md"
+          ],
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.9202529335689664,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.9999999999
+          }
         },
         {
           "question": "Are bullet points or note form appropriate in IELTS Writing responses?",
-          "answer": "response, or note form, is not appropriate).",
-          "sources": [
-            "ielts_academic_writing_example_responses_examiner_comments.md",
-            "ielts_academic_writing_sample_tasks_2023.md",
-            "ielts_writing_band_descriptors.md",
-            "ielts_writing_band_descriptors.md",
-            "article_02.md"
+          "expected_context": "ielts_academic_writing_example_responses_examiner_comments.md: Responses are penalised if they are not written as full, connected text, including the use of bullet points or note form.",
+          "answer": "Không, bullet points hoặc note form là không phù hợp trong các phản hồi IELTS Writing. Các ứng viên sẽ bị phạt nếu sử dụng chúng. [legal/ielts_academic_writing_sample_tasks_2023.md::chunk-12]",
+          "retrieved_ids": [
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-8",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-2",
+            "news/article_04.md::chunk-10",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-12",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-7"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.20608363501393825,
-          "context_recall": 0.875,
-          "context_precision": 0.2
+          "retrieved_sources": [
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "article_04.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md"
+          ],
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.9999997776231614,
+            "context_recall": 0.5,
+            "llm_context_precision_with_reference": 0.499999999975
+          }
         },
         {
           "question": "What does coherence mean in the IELTS Writing assessment criteria?",
-          "answer": "To find out more about the assessment criteria used by IELTS examiners, search online for the IELTS Writing public band descriptors.",
-          "sources": [
-            "article_01.md",
+          "expected_context": "ielts_academic_writing_example_responses_examiner_comments.md: Coherence refers to the linking of ideas through logical sequencing.",
+          "answer": "Coherence in the IELTS Writing assessment criteria refers to the linking of ideas through logical sequencing. It is concerned with the overall organisation and logical development of the message. [legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-4]",
+          "retrieved_ids": [
+            "news/article_01.md::chunk-4",
+            "news/article_01.md::chunk-0",
+            "legal/ielts_academic_writing_example_responses_examiner_comments.md::chunk-4",
+            "legal/ielts_academic_writing_sample_tasks_2023.md::chunk-15",
+            "news/article_01.md::chunk-1"
+          ],
+          "retrieved_sources": [
             "article_01.md",
             "article_01.md",
             "ielts_academic_writing_example_responses_examiner_comments.md",
-            "ielts_academic_writing_sample_tasks_2023.md"
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_01.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.0,
-          "context_recall": 0.45454545454545453,
-          "context_precision": 0.2
+          "scores": {
+            "faithfulness": 0.3333333333333333,
+            "answer_relevancy": 0.9844495728724768,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.8055555555287036
+          }
         },
         {
           "question": "What are the three kinds of IELTS solution essays described in the guide?",
-          "answer": "There are three kinds of IELTS solution essays.",
-          "sources": [
+          "expected_context": "article_05.md: The Types of IELTS Solution Essay section lists Solution Essay, Cause Solution Essay, and Problem Solution Essay.",
+          "answer": "Ba loại bài luận giải pháp IELTS được mô tả trong hướng dẫn là:\n\n1. **Solution Essay**\n2. **Cause Solution Essay**\n3. **Problem Solution Essay** \n\n[news/article_05.md::chunk-2]",
+          "retrieved_ids": [
+            "news/article_05.md::chunk-2",
+            "news/article_05.md::chunk-1",
+            "news/article_05.md::chunk-4",
+            "news/article_03.md::chunk-11",
+            "news/article_03.md::chunk-6"
+          ],
+          "retrieved_sources": [
             "article_05.md",
             "article_05.md",
             "article_05.md",
-            "article_05.md",
+            "article_03.md",
             "article_03.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.20564035870341515,
-          "context_recall": 0.875,
-          "context_precision": 0.8
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.8754652752629708,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.9999999999666667
+          }
         },
         {
           "question": "What two main causes of reoffending are identified in the model solution essay?",
-          "answer": "## IELTS Solution Essay Model Answer",
-          "sources": [
+          "expected_context": "article_05.md: Reoffending is attributed mainly to the lack of rehabilitation and difficulty finding regular employment once released.",
+          "answer": "Hai nguyên nhân chính của việc tái phạm được xác định trong bài luận mẫu là thiếu sự phục hồi và khó khăn trong việc tìm kiếm việc làm ổn định sau khi ra tù [news/article_05.md::chunk-9].",
+          "retrieved_ids": [
+            "news/article_05.md::chunk-9",
+            "news/article_05.md::chunk-3",
+            "news/article_05.md::chunk-13",
+            "news/article_05.md::chunk-2",
+            "news/article_05.md::chunk-4"
+          ],
+          "retrieved_sources": [
             "article_05.md",
             "article_05.md",
             "article_05.md",
             "article_05.md",
             "article_05.md"
           ],
-          "faithfulness": 1.0,
-          "answer_relevance": 0.07734781234369076,
-          "context_recall": 0.875,
-          "context_precision": 1.0
+          "scores": {
+            "faithfulness": 1.0,
+            "answer_relevancy": 0.8112917044930378,
+            "context_recall": 1.0,
+            "llm_context_precision_with_reference": 0.9999999999
+          }
         }
       ]
     }
