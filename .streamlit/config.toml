@@ -1,0 +1,5 @@
+[server]
+# Transformers exposes many optional vision modules. Streamlit's source watcher
+# probes those modules and triggers noisy torchvision import errors even though
+# this project only uses text embeddings.
+fileWatcherType = "none"

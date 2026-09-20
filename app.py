@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from urllib.parse import urlparse
 
 import streamlit as st
@@ -11,6 +12,8 @@ from src.task10_generation import generate_with_citation
 
 
 load_dotenv()
+
+logger = logging.getLogger("rag_ui")
 
 st.set_page_config(
     page_title="RAG Chatbot",
@@ -49,17 +52,14 @@ def render_sources(sources: list[dict], retrieval_source: str, *, key_prefix: st
 
             url = metadata.get("url")
             if _is_public_url(url):
-                st.link_button(
-                    "Mở nguồn",
-                    url,
-                    key=f"{key_prefix}-source-{index}",
-                )
+                st.markdown(f"[Mở nguồn]({url})")
             if index < len(sources):
                 st.divider()
 
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
+    logger.info("Initialized a new Streamlit chat session")
 
 with st.sidebar:
     st.title("RAG Chatbot")
@@ -85,6 +85,7 @@ for message_index, message in enumerate(st.session_state.messages):
 query = st.chat_input("Nhập câu hỏi...")
 
 if query:
+    logger.info("UI query submitted: query=%r, top_k=%d", query[:200], top_k)
     st.session_state.messages.append({"role": "user", "content": query})
 
     with st.chat_message("user"):
@@ -93,6 +94,13 @@ if query:
     with st.chat_message("assistant"):
         with st.spinner("Đang tìm bằng chứng và tạo câu trả lời..."):
             result = generate_with_citation(query, top_k)
+
+        logger.info(
+            "UI result received: retrieval_source=%s, sources=%d, answer_characters=%d",
+            result["retrieval_source"],
+            len(result["sources"]),
+            len(result["answer"]),
+        )
 
         st.markdown(result["answer"])
         render_sources(

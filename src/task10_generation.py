@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import re
+import logging
 from collections.abc import Iterable
 
 from dotenv import load_dotenv
@@ -12,6 +13,12 @@ from .task9_retrieval_pipeline import retrieve
 
 
 load_dotenv()
+
+logging.basicConfig(
+    level=os.getenv("LOG_LEVEL", "INFO").upper(),
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 TOP_K = 5
 TOP_P = 0.9
@@ -25,7 +32,8 @@ SAFE_REFUSAL = "Tôi không thể xác minh thông tin này từ các nguồn hi
 
 SYSTEM_PROMPT = """Bạn là trợ lý hỏi đáp dựa trên tài liệu.
 Chỉ trả lời bằng thông tin có trong context được cung cấp.
-Mỗi khẳng định thực tế phải kèm citation chứa đúng ID nguồn, ví dụ [chunk-01].
+Mỗi khẳng định thực tế phải kèm citation chứa toàn bộ ID nguồn đúng như context,
+bao gồm cả đường dẫn và hậu tố chunk; không được rút gọn ID.
 Không tự tạo URL, tên tài liệu hoặc citation. Nếu context không đủ bằng chứng,
 hãy dùng đúng câu từ chối an toàn đã được yêu cầu."""
 
@@ -37,12 +45,21 @@ def reorder_for_llm(chunks: list[dict]) -> list[dict]:
     giữ chunk mạnh nhất ở đầu và chunk mạnh thứ hai ở cuối để giảm hiệu ứng
     "lost in the middle". Hàm chỉ tạo list mới, không sửa list đầu vào.
     """
+    logger.debug(
+        "Reordering %d chunks for LLM; input_ids=%s",
+        len(chunks),
+        [chunk.get("id") for chunk in chunks],
+    )
     if len(chunks) <= 2:
-        return list(chunks)
+        reordered = list(chunks)
+        logger.debug("Reorder unchanged; output_ids=%s", [c.get("id") for c in reordered])
+        return reordered
 
     front = chunks[::2]
     back = chunks[1::2]
-    return front + back[::-1]
+    reordered = front + back[::-1]
+    logger.debug("Reorder complete; output_ids=%s", [c.get("id") for c in reordered])
+    return reordered
 
 
 def format_context(chunks: list[dict]) -> str:
@@ -66,7 +83,9 @@ def format_context(chunks: list[dict]) -> str:
         content = str(chunk.get("content") or "").strip()
         parts.append(f"[{' | '.join(labels)}]\n{content}")
 
-    return "\n\n---\n\n".join(parts)
+    context = "\n\n---\n\n".join(parts)
+    logger.info("Formatted context: chunks=%d, characters=%d", len(chunks), len(context))
+    return context
 
 
 def _require_setting(name: str, value: str | None) -> str:
@@ -90,6 +109,12 @@ def call_llm(system_prompt: str, user_message: str) -> str:
     """Gọi OpenAI, Gemini hoặc Anthropic theo cấu hình trong ``.env``."""
     provider = LLM_PROVIDER.strip().lower()
     model = _require_setting("LLM_MODEL", LLM_MODEL)
+    logger.info(
+        "Calling LLM: provider=%s, model=%s, prompt_characters=%d",
+        provider,
+        model,
+        len(system_prompt) + len(user_message),
+    )
 
     if provider == "openai":
         from openai import OpenAI
@@ -115,9 +140,8 @@ def call_llm(system_prompt: str, user_message: str) -> str:
         client = genai.Client(
             api_key=_require_setting("GEMINI_API_KEY", os.getenv("GEMINI_API_KEY"))
         )
-        response = client.models.generate_content(
+        chat = client.chats.create(
             model=model,
-            contents=user_message,
             config=types.GenerateContentConfig(
                 system_instruction=system_prompt,
                 temperature=TEMPERATURE,
@@ -125,6 +149,7 @@ def call_llm(system_prompt: str, user_message: str) -> str:
                 max_output_tokens=MAX_OUTPUT_TOKENS,
             ),
         )
+        response = chat.send_message(user_message)
         text = response.text or ""
 
     elif provider == "anthropic":
@@ -154,6 +179,8 @@ def call_llm(system_prompt: str, user_message: str) -> str:
     text = text.strip()
     if not text:
         raise RuntimeError(f"Provider {provider} trả về nội dung rỗng")
+    logger.info("LLM response received: characters=%d", len(text))
+    logger.info("LLM response preview: %r", text[:500])
     return text
 
 
@@ -169,26 +196,95 @@ def _citations_match_sources(answer: str, chunks: list[dict]) -> bool:
     """Bảo đảm answer có citation và mọi citation đều trỏ tới source thật."""
     cited_ids = {match.strip() for match in re.findall(r"\[([^\[\]]+)\]", answer)}
     source_ids = {str(chunk.get("id", "")).strip() for chunk in chunks}
-    return bool(cited_ids) and cited_ids <= source_ids
+    valid = bool(cited_ids) and cited_ids <= source_ids
+    logger.info(
+        "Citation validation: valid=%s, cited_ids=%s, available_source_ids=%s",
+        valid,
+        sorted(cited_ids),
+        sorted(source_ids),
+    )
+    return valid
+
+
+def _normalize_citations(answer: str, chunks: list[dict]) -> str:
+    """Mở rộng citation rút gọn khi nó khớp duy nhất một source ID.
+
+    Model đôi khi biến ``[path/file.md::chunk-0]`` thành ``[chunk-0]``. Việc
+    chuẩn hóa chỉ được thực hiện khi hậu tố đó xác định duy nhất một source;
+    citation mơ hồ hoặc không tồn tại được giữ nguyên để validator từ chối.
+    """
+    source_ids = {str(chunk.get("id", "")).strip() for chunk in chunks}
+
+    def resolve(cited_id: str) -> str | None:
+        cited_id = cited_id.strip()
+        if cited_id in source_ids:
+            return cited_id
+
+        suffix = f"::{cited_id}"
+        matches = sorted(source_id for source_id in source_ids if source_id.endswith(suffix))
+        if len(matches) == 1:
+            logger.info("Expanded citation %r to %r", cited_id, matches[0])
+            return matches[0]
+        return None
+
+    def replace_brackets(match: re.Match[str]) -> str:
+        resolved = resolve(match.group(1))
+        if resolved is not None:
+            return f"[{resolved}]"
+        return match.group(0)
+
+    normalized = re.sub(r"\[([^\[\]]+)\]", replace_brackets, answer)
+
+    def replace_parentheses(match: re.Match[str]) -> str:
+        resolved = resolve(match.group(1))
+        if resolved is not None:
+            logger.info("Normalized parenthesized citation %r", match.group(1).strip())
+            return f"[{resolved}]"
+        return match.group(0)
+
+    return re.sub(r"\(([^()]+)\)", replace_parentheses, normalized)
 
 
 def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
     """Chạy retrieval và sinh ``GenerationResult`` có nguồn kiểm chứng được."""
     normalized_query = query.strip() if isinstance(query, str) else ""
+    logger.info(
+        "Generation request: query=%r, top_k=%r",
+        normalized_query[:200],
+        top_k,
+    )
     if not normalized_query or not isinstance(top_k, int) or top_k <= 0:
+        logger.warning("Safe refusal: query rỗng hoặc top_k không hợp lệ")
         return _safe_refusal()
 
     try:
+        logger.info("Starting retrieval")
         chunks = retrieve(normalized_query, top_k=top_k)
     except Exception:
+        logger.exception("Safe refusal: retrieval raised an exception")
         return _safe_refusal()
 
     if not chunks:
+        logger.warning("Safe refusal: retrieval returned no chunks")
         return _safe_refusal()
+
+    logger.info(
+        "Retrieval completed: count=%d, methods=%s, results=%s",
+        len(chunks),
+        sorted({str(chunk.get("retrieval_method")) for chunk in chunks}),
+        [
+            {
+                "id": chunk.get("id"),
+                "score": round(float(chunk.get("score", 0.0)), 6),
+            }
+            for chunk in chunks
+        ],
+    )
 
     reordered = reorder_for_llm(chunks)
     context = format_context(reordered)
     if not context.strip():
+        logger.warning("Safe refusal: formatted context is empty")
         return _safe_refusal()
 
     user_message = (
@@ -200,15 +296,27 @@ def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
     try:
         answer = call_llm(SYSTEM_PROMPT, user_message)
     except Exception:
+        logger.exception("Safe refusal: LLM provider raised an exception")
         return _safe_refusal()
 
-    if answer == SAFE_REFUSAL or not _citations_match_sources(answer, chunks):
+    if answer == SAFE_REFUSAL:
+        logger.warning("Safe refusal: LLM returned the refusal message")
+        return _safe_refusal()
+    answer = _normalize_citations(answer, chunks)
+    if not _citations_match_sources(answer, chunks):
+        logger.warning("Safe refusal: answer has no valid source citation")
         return _safe_refusal()
 
     retrieval_source = (
         "pageindex"
         if all(chunk.get("retrieval_method") == "pageindex" for chunk in chunks)
         else "hybrid"
+    )
+    logger.info(
+        "Generation completed: retrieval_source=%s, sources=%d, answer_characters=%d",
+        retrieval_source,
+        len(chunks),
+        len(answer),
     )
     return {
         "answer": answer,
