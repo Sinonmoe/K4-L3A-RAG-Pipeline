@@ -1,0 +1,479 @@
+{
+  "method": "offline-proxy-v1-tfidf-char-3-5",
+  "top_k": 5,
+  "corpus_chunks": 283,
+  "configs": {
+    "dense-only": {
+      "metrics": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.13745251450041335,
+        "context_recall": 0.7682031149678209,
+        "context_precision": 0.37333333333333335
+      },
+      "elapsed_seconds": 0.13192960000014864,
+      "cases": [
+        {
+          "question": "How many examiners mark an IELTS Writing test?",
+          "answer": "These qualified examiners mark your Writing test against clearly defined assessment criteria and their performance is subject to an extensive and detailed review on a regular basis.",
+          "sources": [
+            "article_01.md",
+            "article_01.md",
+            "article_01.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_02.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.21248275333494782,
+          "context_recall": 0.9166666666666666,
+          "context_precision": 0.6
+        },
+        {
+          "question": "What four criteria are used to assess IELTS Writing Task 1?",
+          "answer": "Can you explain the Task response criteria in IELTS Writing?",
+          "sources": [
+            "article_01.md",
+            "article_01.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "article_01.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.07397129483465995,
+          "context_recall": 1.0,
+          "context_precision": 0.2
+        },
+        {
+          "question": "What criterion replaces Task Achievement when IELTS Writing Task 2 is assessed?",
+          "answer": "Writing Task 2 is assessed in much the same way except for the task response criterion.",
+          "sources": [
+            "article_01.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.387556981443423,
+          "context_recall": 0.6,
+          "context_precision": 0.2
+        },
+        {
+          "question": "How much does each assessment criterion contribute to the IELTS essay score?",
+          "answer": "Use them as a guide to create an essay suitable for a high band score in IELTS.",
+          "sources": [
+            "article_01.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_03.md",
+            "article_01.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.14587439082056453,
+          "context_recall": 0.7272727272727273,
+          "context_precision": 0.0
+        },
+        {
+          "question": "How should the 60 minutes for the IELTS Writing test generally be divided between Task 1 and Task 2?",
+          "answer": "The Writing test (consisting of Writing tasks 1 and 2) takes approximately 60 minutes.",
+          "sources": [
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_02.md",
+            "article_01.md",
+            "article_01.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.10397839113249145,
+          "context_recall": 1.0,
+          "context_precision": 0.4
+        },
+        {
+          "question": "What is the minimum word count for IELTS Academic Writing Task 1?",
+          "answer": "Sample Academic Writing Part 1",
+          "sources": [
+            "article_05.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.0,
+          "context_recall": 1.0,
+          "context_precision": 0.4
+        },
+        {
+          "question": "What is the minimum word count for IELTS Writing Task 2?",
+          "answer": "minimum word count for Task 2 of 250 words, so there is room for further development.",
+          "sources": [
+            "article_05.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.22028815056182974,
+          "context_recall": 0.42857142857142855,
+          "context_precision": 0.4
+        },
+        {
+          "question": "What structure is generally recommended for an IELTS Task 2 essay?",
+          "answer": "**[Essay Structure & Paragraphing](https://ieltsliz.com/how-many-paragraphs-for-an-ielts-essay/)**",
+          "sources": [
+            "article_03.md",
+            "article_03.md",
+            "article_05.md",
+            "ielts_writing_band_descriptors.md",
+            "ielts_academic_writing_sample_tasks_2023.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.0570065534192356,
+          "context_recall": 0.6470588235294118,
+          "context_precision": 0.0
+        },
+        {
+          "question": "Should a linking word be placed in every sentence of an IELTS essay?",
+          "answer": "Don’t fall into the trap of trying to put a linking word in every sentence.",
+          "sources": [
+            "article_02.md",
+            "article_03.md",
+            "article_02.md",
+            "article_03.md",
+            "article_05.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.09349477497536716,
+          "context_recall": 0.8461538461538461,
+          "context_precision": 0.4
+        },
+        {
+          "question": "What sentence structures should a candidate mix in the first draft of an IELTS essay?",
+          "answer": "candidate’s writing at sentence level.",
+          "sources": [
+            "article_03.md",
+            "article_02.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.11521554337793122,
+          "context_recall": 0.4444444444444444,
+          "context_precision": 0.2
+        },
+        {
+          "question": "What should a writer do if a sentence is too long during editing?",
+          "answer": "* **The sentence is too long.** A sentence is probably too long if you need to take a breath in the middle of reading it.",
+          "sources": [
+            "article_02.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_02.md",
+            "ielts_academic_writing_sample_tasks_2023.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.16284707754470526,
+          "context_recall": 0.8333333333333334,
+          "context_precision": 0.4
+        },
+        {
+          "question": "Are bullet points or note form appropriate in IELTS Writing responses?",
+          "answer": "response, or note form, is not appropriate).",
+          "sources": [
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_writing_band_descriptors.md",
+            "ielts_writing_band_descriptors.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.20608363501393825,
+          "context_recall": 0.875,
+          "context_precision": 0.4
+        },
+        {
+          "question": "What does coherence mean in the IELTS Writing assessment criteria?",
+          "answer": "To find out more about the assessment criteria used by IELTS examiners, search online for the IELTS Writing public band descriptors.",
+          "sources": [
+            "article_01.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_01.md",
+            "article_01.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.0,
+          "context_recall": 0.45454545454545453,
+          "context_precision": 0.2
+        },
+        {
+          "question": "What are the three kinds of IELTS solution essays described in the guide?",
+          "answer": "There are three kinds of IELTS solution essays.",
+          "sources": [
+            "article_05.md",
+            "article_05.md",
+            "article_05.md",
+            "article_05.md",
+            "article_03.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.20564035870341515,
+          "context_recall": 0.875,
+          "context_precision": 0.8
+        },
+        {
+          "question": "What two main causes of reoffending are identified in the model solution essay?",
+          "answer": "## IELTS Solution Essay Model Answer",
+          "sources": [
+            "article_05.md",
+            "article_05.md",
+            "article_05.md",
+            "article_05.md",
+            "article_05.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.07734781234369076,
+          "context_recall": 0.875,
+          "context_precision": 1.0
+        }
+      ]
+    },
+    "hybrid-rrf": {
+      "metrics": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.16529490615700365,
+        "context_recall": 0.7888483303189187,
+        "context_precision": 0.37333333333333335
+      },
+      "elapsed_seconds": 0.2613499999988562,
+      "cases": [
+        {
+          "question": "How many examiners mark an IELTS Writing test?",
+          "answer": "These qualified examiners mark your Writing test against clearly defined assessment criteria and their performance is subject to an extensive and detailed review on a regular basis.",
+          "sources": [
+            "article_01.md",
+            "article_01.md",
+            "article_02.md",
+            "article_03.md",
+            "article_01.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.21248275333494782,
+          "context_recall": 1.0,
+          "context_precision": 0.6
+        },
+        {
+          "question": "What four criteria are used to assess IELTS Writing Task 1?",
+          "answer": "Can you explain the Task response criteria in IELTS Writing?",
+          "sources": [
+            "article_01.md",
+            "article_01.md",
+            "article_05.md",
+            "article_01.md",
+            "article_01.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.07397129483465995,
+          "context_recall": 1.0,
+          "context_precision": 0.0
+        },
+        {
+          "question": "What criterion replaces Task Achievement when IELTS Writing Task 2 is assessed?",
+          "answer": "Writing Task 2 is assessed in much the same way except for the task response criterion.",
+          "sources": [
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_05.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "article_01.md",
+            "article_03.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.387556981443423,
+          "context_recall": 0.6,
+          "context_precision": 0.2
+        },
+        {
+          "question": "How much does each assessment criterion contribute to the IELTS essay score?",
+          "answer": "## How is the IELTS essay component marked?",
+          "sources": [
+            "article_01.md",
+            "article_02.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_02.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.1059921313509325,
+          "context_recall": 0.7272727272727273,
+          "context_precision": 0.4
+        },
+        {
+          "question": "How should the 60 minutes for the IELTS Writing test generally be divided between Task 1 and Task 2?",
+          "answer": "The Writing test (consisting of Writing tasks 1 and 2) takes approximately 60 minutes.",
+          "sources": [
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_02.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.10397839113249145,
+          "context_recall": 1.0,
+          "context_precision": 0.6
+        },
+        {
+          "question": "What is the minimum word count for IELTS Academic Writing Task 1?",
+          "answer": "minimum word count for Task 2 of 250 words, so there is room for further development.",
+          "sources": [
+            "article_05.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "article_01.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.26951761324603224,
+          "context_recall": 0.8,
+          "context_precision": 0.2
+        },
+        {
+          "question": "What is the minimum word count for IELTS Writing Task 2?",
+          "answer": "minimum word count for Task 2 of 250 words, so there is room for further development.",
+          "sources": [
+            "article_05.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "article_03.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.22028815056182974,
+          "context_recall": 0.42857142857142855,
+          "context_precision": 0.4
+        },
+        {
+          "question": "What structure is generally recommended for an IELTS Task 2 essay?",
+          "answer": "**[Essay Structure & Paragraphing](https://ieltsliz.com/how-many-paragraphs-for-an-ielts-essay/)**",
+          "sources": [
+            "article_03.md",
+            "article_05.md",
+            "article_03.md",
+            "ielts_writing_band_descriptors.md",
+            "ielts_writing_band_descriptors.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.0570065534192356,
+          "context_recall": 0.7058823529411765,
+          "context_precision": 0.0
+        },
+        {
+          "question": "Should a linking word be placed in every sentence of an IELTS essay?",
+          "answer": "Don’t fall into the trap of trying to put a linking word in every sentence.",
+          "sources": [
+            "article_02.md",
+            "article_03.md",
+            "article_02.md",
+            "article_04.md",
+            "article_05.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.09349477497536716,
+          "context_recall": 0.7692307692307693,
+          "context_precision": 0.4
+        },
+        {
+          "question": "What sentence structures should a candidate mix in the first draft of an IELTS essay?",
+          "answer": "There is a mix of",
+          "sources": [
+            "article_02.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "article_03.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "article_02.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.3032160644503863,
+          "context_recall": 0.8888888888888888,
+          "context_precision": 0.4
+        },
+        {
+          "question": "What should a writer do if a sentence is too long during editing?",
+          "answer": "* **The sentence is too long.** A sentence is probably too long if you need to take a breath in the middle of reading it.",
+          "sources": [
+            "article_02.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_sample_tasks_2023.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.16284707754470526,
+          "context_recall": 0.8333333333333334,
+          "context_precision": 0.2
+        },
+        {
+          "question": "Are bullet points or note form appropriate in IELTS Writing responses?",
+          "answer": "response, or note form, is not appropriate).",
+          "sources": [
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_sample_tasks_2023.md",
+            "ielts_writing_band_descriptors.md",
+            "ielts_writing_band_descriptors.md",
+            "article_02.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.20608363501393825,
+          "context_recall": 0.875,
+          "context_precision": 0.2
+        },
+        {
+          "question": "What does coherence mean in the IELTS Writing assessment criteria?",
+          "answer": "To find out more about the assessment criteria used by IELTS examiners, search online for the IELTS Writing public band descriptors.",
+          "sources": [
+            "article_01.md",
+            "article_01.md",
+            "article_01.md",
+            "ielts_academic_writing_example_responses_examiner_comments.md",
+            "ielts_academic_writing_sample_tasks_2023.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.0,
+          "context_recall": 0.45454545454545453,
+          "context_precision": 0.2
+        },
+        {
+          "question": "What are the three kinds of IELTS solution essays described in the guide?",
+          "answer": "There are three kinds of IELTS solution essays.",
+          "sources": [
+            "article_05.md",
+            "article_05.md",
+            "article_05.md",
+            "article_05.md",
+            "article_03.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.20564035870341515,
+          "context_recall": 0.875,
+          "context_precision": 0.8
+        },
+        {
+          "question": "What two main causes of reoffending are identified in the model solution essay?",
+          "answer": "## IELTS Solution Essay Model Answer",
+          "sources": [
+            "article_05.md",
+            "article_05.md",
+            "article_05.md",
+            "article_05.md",
+            "article_05.md"
+          ],
+          "faithfulness": 1.0,
+          "answer_relevance": 0.07734781234369076,
+          "context_recall": 0.875,
+          "context_precision": 1.0
+        }
+      ]
+    }
+  }
+}

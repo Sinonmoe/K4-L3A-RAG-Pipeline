@@ -1,12 +1,13 @@
 import streamlit as st
 from dotenv import load_dotenv
+from src.task10_generation import generate_with_citation
 
 
 load_dotenv()
 
 st.set_page_config(
     page_title="RAG Chatbot",
-    page_icon="",
+    page_icon="📚",
     layout="wide",
 )
 
@@ -15,16 +16,23 @@ if "messages" not in st.session_state:
 
 with st.sidebar:
     st.title("RAG Chatbot")
-    st.caption("Thay mô tả theo đề tài của nhóm")
+    st.caption("Trợ lý tra cứu tài liệu IELTS Writing")
     top_k = st.slider("Số chunks", 3, 10, 5)
 
 st.title("RAG Chatbot")
-st.caption("Thay tiêu đề và hướng dẫn sử dụng")
+st.caption("Đặt câu hỏi về tiêu chí chấm điểm, cấu trúc và cách viết IELTS Writing.")
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
-        # TODO: Hiển thị sources và retrieval score.
+        if message.get("sources"):
+            with st.expander("Nguồn tham khảo"):
+                for source in message["sources"]:
+                    metadata = source["metadata"]
+                    st.markdown(
+                        f"- **{metadata['title']}** — `{metadata['source']}` "
+                        f"(score: {source['score']:.3f}, {source['retrieval_method']})"
+                    )
 
 query = st.chat_input("Nhập câu hỏi...")
 
@@ -35,11 +43,20 @@ if query:
         st.markdown(query)
 
     with st.chat_message("assistant"):
-        # TODO: Gọi generate_with_citation(query, top_k).
-        answer = "TODO: Itegration RAG Pipeline hêre"
-        sources = []
+        result = generate_with_citation(query, top_k)
+        answer = result["answer"]
+        sources = result["sources"]
         st.markdown(answer)
 
-        # TODO: Hiển thị sources và citation.
+        if sources:
+            with st.expander("Nguồn tham khảo"):
+                for source in sources:
+                    metadata = source["metadata"]
+                    st.markdown(
+                        f"- **{metadata['title']}** — `{metadata['source']}` "
+                        f"(score: {source['score']:.3f}, {source['retrieval_method']})"
+                    )
 
-    # TODO: Lưu answer và sources vào session state.
+    st.session_state.messages.append(
+        {"role": "assistant", "content": answer, "sources": sources}
+    )
