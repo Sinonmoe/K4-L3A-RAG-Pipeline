@@ -253,3 +253,19 @@ def test_generation_result_validator_accepts_safe_refusal():
             "retrieval_source": "none",
         }
     )
+
+
+def test_normalize_citations_strips_copied_context_label():
+    from src.task10_generation import _citations_match_sources, _normalize_citations
+
+    chunks = [{"id": "news/article_01.md::chunk-3"}]
+    answer = (
+        "Two to four examiners. "
+        "[ID: news/article_01.md::chunk-3 | Title: IELTS | Source: article_01.md]"
+    )
+    normalized = _normalize_citations(answer, chunks)
+    assert normalized.endswith("[news/article_01.md::chunk-3]")
+    assert _citations_match_sources(normalized, chunks)
+    assert not _citations_match_sources(
+        _normalize_citations("x [ID: news/other.md::chunk-9]", chunks), chunks
+    )

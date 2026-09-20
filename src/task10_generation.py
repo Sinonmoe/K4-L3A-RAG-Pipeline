@@ -217,6 +217,9 @@ def _normalize_citations(answer: str, chunks: list[dict]) -> str:
 
     def resolve(cited_id: str) -> str | None:
         cited_id = cited_id.strip()
+        if cited_id.startswith("ID:"):
+            # Model đôi khi chép cả nhãn context: "ID: <id> | Title: ... | Source: ...".
+            cited_id = cited_id[len("ID:"):].split(" | ", 1)[0].strip()
         if cited_id in source_ids:
             return cited_id
 
