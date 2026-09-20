@@ -8,11 +8,11 @@
 | Framework and version              | TODO  |
 | Evaluator model                    | TODO  |
 | Generator model                    | TODO  |
-| Embedding model                    | TODO  |
+| Embedding model                    | text-embedding-3-small (OpenAI, 1536 dim) |
 | Corpus version/commit              | TODO  |
 | Golden dataset size                | TODO  |
-| `top_k`                            | TODO  |
-| Fallback threshold and calibration | TODO  |
+| `top_k`                            | 5     |
+| Fallback threshold and calibration | Threshold = 0.50. Hiệu chỉnh bằng 2 query: In-domain 'IELTS writing task 2 band descriptors criteria' (score ~0.825) và Out-of-domain 'công thức nấu phở bò Hà Nội gia truyền' (score ~0.227). Lưu ý: Ngưỡng này được xác định thực nghiệm riêng cho corpus IELTS Writing và embedding model hiện tại, không mang tính tuyệt đối cho mọi corpus khác. |
 
 ## Configurations
 

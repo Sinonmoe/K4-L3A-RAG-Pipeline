@@ -14,32 +14,58 @@ Cài browser trước khi chạy:
 """
 
 import asyncio
+import io
 import json
+from datetime import datetime
 from pathlib import Path
+
+import requests
+from bs4 import BeautifulSoup
+from markitdown import MarkItDown
 
 
 DATA_DIR = Path(__file__).parent.parent / "data" / "landing" / "news"
 
+# Chủ đề: IELTS Writing — band descriptors, tiêu chí chấm điểm, bài viết mẫu
 ARTICLE_URLS = [
-    # TODO: Thêm ít nhất 5 public URL.
+    "https://ielts.idp.com/results/scores/writing",
+    "https://ielts.org/news-and-insights/10-steps-to-writing-high-scoring-ielts-essays",
+    "https://ieltsliz.com/ielts-writing-task-2/",
+    "https://ieltsliz.com/ielts-sample-essay/",
+    "https://ieltsliz.com/ielts-solution-essay-band-9-model-answer/",
 ]
+
+HEADERS = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
+NOISE_TAGS = ["script", "style", "noscript", "nav", "header", "footer", "aside", "form", "iframe", "svg"]
+CONTENT_SELECTORS = ["article", "main", ".entry-content", "[role=main]"]
+
+
+def _fetch_and_convert(url: str) -> dict:
+    response = requests.get(url, headers=HEADERS, timeout=60)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    title = soup.title.get_text(strip=True) if soup.title else ""
+    if not title and soup.h1:
+        title = soup.h1.get_text(strip=True)
+
+    for tag in soup(NOISE_TAGS):
+        tag.decompose()
+    container = next((el for sel in CONTENT_SELECTORS if (el := soup.select_one(sel))), soup.body)
+
+    converted = MarkItDown().convert_stream(
+        io.BytesIO(str(container).encode("utf-8")), file_extension=".html"
+    )
+    return {
+        "url": url,
+        "title": title or "Unknown",
+        "date_crawled": datetime.now().isoformat(),
+        "content_markdown": converted.text_content.strip(),
+    }
 
 
 async def crawl_article(url: str) -> dict:
-    # TODO: Implement crawling logic.
-    #
-    # from datetime import datetime
-    # from crawl4ai import AsyncWebCrawler
-    #
-    # async with AsyncWebCrawler() as crawler:
-    #     result = await crawler.arun(url=url)
-    #     return {
-    #         "url": url,
-    #         "title": result.metadata.get("title", "Unknown"),
-    #         "date_crawled": datetime.now().isoformat(),
-    #         "content_markdown": result.markdown,
-    #     }
-    raise NotImplementedError("Implement crawl_article")
+    return await asyncio.to_thread(_fetch_and_convert, url)
 
 
 async def crawl_all() -> None:
